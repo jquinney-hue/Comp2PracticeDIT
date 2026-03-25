@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excel for Digital Information Technology</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --sage: #6B8F6E;
+    --sage-light: #A8C5AB;
+    --sage-pale: #E8F0E9;
+    --amber: #D4843A;
+    --amber-light: #F0C280;
+    --amber-pale: #FDF3E3;
+    --slate: #3D4F5C;
+    --slate-light: #7A93A4;
+    --slate-pale: #EBF0F4;
+    --rose: #B5616A;
+    --rose-pale: #FAEAEB;
+    --indigo: #5B6FA8;
+    --indigo-pale: #EAECf8;
+    --teal: #3D8A8A;
+    --teal-pale: #E3F2F2;
+    --paper: #FAFAF7;
+    --ink: #1E2A32;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  h1, h2, h3 { font-family: 'DM Serif Display', serif; }
+
+  .hero-bg {
+    background: linear-gradient(135deg, var(--slate) 0%, #2C3E4A 60%, #1E2A32 100%);
+  }
+
+  /* NAV */
+  .nav-pill {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    font-family: 'DM Mono', monospace;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+  .nav-pill:hover { transform: translateY(-1px); }
+
+  /* SECTION CARDS */
+  .section-card {
+    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.07);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+  }
+  .section-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+
+  .section-header {
+    padding: 24px 28px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+  }
+
+  .section-body {
+    display: none;
+    padding: 0 28px 28px;
+  }
+  .section-body.open { display: block; }
+
+  /* STEPS */
+  .step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-content { flex: 1; }
+  .step-content h4 { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
+  .step-content p { font-size: 0.875rem; color: #4A5568; margin: 0; }
+
+  /* CODE / KEY TAGS */
+  kbd {
+    display: inline-block;
+    background: #F3F4F6;
+    border: 1px solid #D1D5DB;
+    border-bottom: 2px solid #9CA3AF;
+    border-radius: 4px;
+    padding: 1px 7px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: #374151;
+  }
+  code {
+    background: #F3F4F6;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.83rem;
+    color: #B45309;
+  }
+
+  /* TIP BOX */
+  .tip-box {
+    border-left: 3px solid;
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.875rem;
+    margin: 16px 0;
+  }
+
+  /* TABLE */
+  .excel-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    font-family: 'DM Mono', monospace;
+    margin: 12px 0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .excel-table th {
+    background: var(--slate);
+    color: white;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 500;
+  }
+  .excel-table td {
+    padding: 7px 12px;
+    border-bottom: 1px solid #E5E7EB;
+  }
+  .excel-table tr:nth-child(even) td { background: #F9FAFB; }
+  .excel-table tr:last-child td { border-bottom: none; }
+
+  .formula-row td:first-child { color: var(--teal); font-weight: 500; }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-family: 'DM Mono', monospace;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+    vertical-align: middle;
+  }
+
+  /* PROGRESS */
+  .progress-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: #E5E7EB;
+    margin-bottom: 24px;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  /* TASK BOX */
+  .task-box {
+    border: 1.5px dashed;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 20px;
+    font-size: 0.875rem;
+  }
+  .task-box h4 { font-family: 'DM Sans', sans-serif; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem; }
+  .task-box ul { margin: 0; padding-left: 18px; }
+  .task-box li { margin-bottom: 4px; }
+
+  /* CHEVRON */
+  .chevron { transition: transform 0.3s ease; }
+  .chevron.open { transform: rotate(180deg); }
+
+  /* SCROLL SMOOTH */
+  html { scroll-behavior: smooth; }
+
+  .section-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* STICKY NAV */
+  .sticky-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250,250,247,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+  }
+
+  @media (max-width: 640px) {
+    .section-header { padding: 18px 18px 14px; }
+    .section-body { padding: 0 18px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero-bg text-white">
+  <div class="max-w-4xl mx-auto px-6 py-14">
+    <div class="flex items-center gap-3 mb-5">
+      <span class="badge" style="background:rgba(255,255,255,0.15); color:white;">BTEC Level 1/2</span>
+      <span class="badge" style="background:rgba(255,255,255,0.15); color:white;">Digital Information Technology</span>
+    </div>
+    <h1 class="text-4xl md:text-5xl font-normal leading-tight mb-4" style="font-family:'DM Serif Display',serif;">
+      Microsoft Excel<br><em>Step-by-Step Guide</em>
+    </h1>
+    <p class="text-lg" style="color:rgba(255,255,255,0.7); max-width:520px;">
+      A practical walkthrough of Excel skills mapped to your Digital Information Technology course. Work through each topic at your own pace.
+    </p>
+    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4" style="max-width:480px;">
+      <div class="text-center">
+        <div class="text-3xl font-bold" style="font-family:'DM Serif Display',serif;">7</div>
+        <div class="text-xs" style="color:rgba(255,255,255,0.6);">Topic Areas</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl font-bold" style="font-family:'DM Serif Display',serif;">50+</div>
+        <div class="text-xs" style="color:rgba(255,255,255,0.6);">Step-by-step tasks</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl font-bold" style="font-family:'DM Serif Display',serif;">12h</div>
+        <div class="text-xs" style="color:rgba(255,255,255,0.6);">Suggested time</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl font-bold" style="font-family:'DM Serif Display',serif;">Excel</div>
+        <div class="text-xs" style="color:rgba(255,255,255,0.6);">2016 / 365</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STICKY NAV -->
+<div class="sticky-nav">
+  <div class="max-w-4xl mx-auto px-6 py-3 overflow-x-auto">
+    <div class="flex gap-2 min-w-max">
+      <a href="#a1" class="nav-pill" style="background:var(--sage-pale);color:var(--sage);">A1 Data &amp; Info</a>
+      <a href="#a2" class="nav-pill" style="background:var(--amber-pale);color:var(--amber);">A2 Representing Info</a>
+      <a href="#a3" class="nav-pill" style="background:var(--slate-pale);color:var(--slate);">A3 Validation</a>
+      <a href="#a4" class="nav-pill" style="background:var(--teal-pale);color:var(--teal);">A4 Data Collection</a>
+      <a href="#a5" class="nav-pill" style="background:var(--rose-pale);color:var(--rose);">A5 Quality &amp; Decisions</a>
+      <a href="#a6" class="nav-pill" style="background:var(--indigo-pale);color:var(--indigo);">A6 Data Modelling</a>
+      <a href="#a7" class="nav-pill" style="background:#FEF3E2;color:#C05621;">A7 Threats</a>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="max-w-4xl mx-auto px-6 py-10 space-y-6">
+
+  <!-- ===================== A1 ===================== -->
+  <div id="a1" class="section-card" style="background:white; border-color:var(--sage-light);">
+    <div class="section-header" onclick="toggle('body-a1', 'chev-a1')" style="background:var(--sage-pale);">
+      <div class="flex items-center gap-4">
+        <span class="step-num" style="background:var(--sage);color:white;">A1</span>
+        <div>
+          <div class="section-tag" style="color:var(--sage);">Topic Area 1 · 2 hours</div>
+          <h2 class="text-xl mt-0.5">Characteristics of Data &amp; Information</h2>
+        </div>
+      </div>
+      <svg id="chev-a1" class="chevron w-5 h-5" style="color:var(--sage);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </div>
+    <div id="body-a1" class="section-body open">
+      <p class="text-sm mb-6" style="color:#6B7280;">Use Excel to explore the difference between raw data and meaningful information by entering, organising, and processing data.</p>
+
+      <h3 class="text-base font-semibold mb-3" style="font-family:'DM Sans',sans-serif; color:var(--slate);">📋 Part 1 — Enter Raw Data</h3>
+      <div class="step"><span class="step-num" style="background:var(--sage-pale);color:var(--sage);">1</span><div class="step-content"><h4>Open a new workbook</h4><p>Launch Excel. Click <strong>File → New → Blank Workbook</strong>. Save it immediately as <code>A1_Data_Information.xlsx</code> using <kbd>Ctrl</kbd> + <kbd>S</kbd>.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--sage-pale);color:var(--sage);">2</span><div class="step-content"><h4>Label your columns</h4><p>In Row 1, type these headers: <code>A1: Date</code>, <code>B1: Visitors</code>, <code>C1: Parking Spaces</code>, <code>D1: Total Sales (£)</code>, <code>E1: Chemist Sales (£)</code>. Bold them with <kbd>Ctrl</kbd> + <kbd>B</kbd>.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--sage-pale);color:var(--sage);">3</span><div class="step-content"><h4>Enter the shopping centre data</h4><p>In Row 2, enter: <code>18/06/2020</code> | <code>2000</code> | <code>200</code> | <code>150000</code> | <code>2000</code>. This is <strong>raw data</strong> — numbers with no meaning yet.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--sage-pale);color:var(--sage);">4</span><div class="step-content"><h4>Format the date column</h4><p>Click cell A2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> to open Format Cells. Choose <strong>Date</strong> and pick the format <code>DD/MM/YYYY</code>. Click OK.</p></div></div>
+
+      <h3 class="text-base font-semibold mb-3 mt-6" style="font-family:'DM Sans',sans-serif; color:var(--slate);">📊 Part 2 — Turn Data into Information</h3>
+      <div class="step"><span class="step-num" style="background:var(--sage-pale);color:var(--sage);">5</span><div class="step-content"><h4>Calculate parking usage</h4><p>In <code>F1</code> type <strong>Parking Usage %</strong>. In <code>F2</code> type the formula: <code>=B2/C2*100</code>. This tells us what percentage of parking spaces were needed — <em>now the data has meaning!</em></p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--sage-pale);color:var(--sage);">6</span><div class="step-content"><h4>Calculate average spend per visitor</h4><p>In <code>G1</code> type <strong>Avg Spend (£)</strong>. In <code>G2</code> type: <code>=D2/B2</code>. Round to 2 decimal places: <code>=ROUND(D2/B2,2)</code>.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--sage-pale);color:var(--sage);">7</span><div class="step-content"><h4>Add a context column</h4><p>In <code>H1</code> type <strong>Context Note</strong>. In <code>H2</code> type: <em>"Sale on popular items in chemist"</em>. Notice how context makes data more informative.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--sage-pale);color:var(--sage);">8</span><div class="step-content"><h4>Add a second row (previous year)</h4><p>In Row 3, enter the same date one year earlier (<code>18/06/2019</code>) and estimated lower sales values. In <code>I1</code> type <strong>YoY Change (£)</strong>. In <code>I3</code> type: <code>=D2-D3</code> — this shows year-on-year growth.</p></div></div>
+
+      <div class="tip-box" style="border-color:var(--sage);background:var(--sage-pale);">
+        <strong style="color:var(--sage);">💡 Key Concept:</strong> The numbers in columns A–E are <strong>data</strong>. Once you add formulas (F–I) that give context and meaning, it becomes <strong>information</strong> that can inform decisions.
+      </div>
+
+      <div class="task-box" style="border-color:var(--sage);background:#F0F7F1;">
+        <h4 style="color:var(--sage);">✅ Your Task</h4>
+        <ul>
+          <li>Add 5 more rows for different days at the shopping centre (make up realistic figures).</li>
+          <li>Use <code>=AVERAGE(B2:B7)</code> to find average daily visitors.</li>
+          <li>In a text box (Insert → Text Box), write 2 sentences explaining what information you can now extract.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== A2 ===================== -->
+  <div id="a2" class="section-card" style="background:white; border-color:var(--amber-light);">
+    <div class="section-header" onclick="toggle('body-a2', 'chev-a2')" style="background:var(--amber-pale);">
+      <div class="flex items-center gap-4">
+        <span class="step-num" style="background:var(--amber);color:white;">A2</span>
+        <div>
+          <div class="section-tag" style="color:var(--amber);">Topic Area 2 · 1 hour</div>
+          <h2 class="text-xl mt-0.5">Representing Information</h2>
+        </div>
+      </div>
+      <svg id="chev-a2" class="chevron w-5 h-5" style="color:var(--amber);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </div>
+    <div id="body-a2" class="section-body">
+      <p class="text-sm mb-6" style="color:#6B7280;">Create multiple types of charts and visual representations in Excel to practise displaying information in different ways.</p>
+
+      <h3 class="text-base font-semibold mb-3" style="font-family:'DM Sans',sans-serif; color:var(--slate);">📈 Part 1 — Create a Bar Chart</h3>
+      <div class="step"><span class="step-num" style="background:var(--amber-pale);color:var(--amber);">1</span><div class="step-content"><h4>Set up your data table</h4><p>On a new sheet (right-click a tab → <strong>Insert Sheet</strong>, name it <code>A2_Charts</code>), create a table with shop names and their sales:</p>
+        <table class="excel-table mt-2"><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>Shop</td><td>Sales (£)</td></tr><tr><td>Clothes</td><td>45000</td></tr><tr><td>Sports</td><td>32000</td></tr><tr><td>Chemist</td><td>2000</td></tr><tr><td>Phone</td><td>28000</td></tr><tr><td>Café</td><td>15000</td></tr></tbody></table>
+      </div></div>
+      <div class="step"><span class="step-num" style="background:var(--amber-pale);color:var(--amber);">2</span><div class="step-content"><h4>Select and insert a bar chart</h4><p>Highlight cells <code>A1:B6</code>. Go to <strong>Insert → Charts → Bar Chart → Clustered Bar</strong>. A chart will appear on your sheet.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--amber-pale);color:var(--amber);">3</span><div class="step-content"><h4>Add a chart title</h4><p>Click the chart title (it says "Chart Title"). Type: <strong>Shopping Centre Sales by Shop</strong>. Press Enter.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--amber-pale);color:var(--amber);">4</span><div class="step-content"><h4>Label the axes</h4><p>Click the chart → <strong>Chart Design tab → Add Chart Element → Axis Titles</strong>. Add both a Primary Horizontal title (<em>Sales £</em>) and Primary Vertical title (<em>Shop Name</em>).</p></div></div>
+
+      <h3 class="text-base font-semibold mb-3 mt-6" style="font-family:'DM Sans',sans-serif; color:var(--slate);">🥧 Part 2 — Create a Pie Chart</h3>
+      <div class="step"><span class="step-num" style="background:var(--amber-pale);color:var(--amber);">5</span><div class="step-content"><h4>Insert a pie chart</h4><p>Select <code>A1:B6</code> again. Go to <strong>Insert → Charts → Pie → 2-D Pie</strong>. Move it below your bar chart.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--amber-pale);color:var(--amber);">6</span><div class="step-content"><h4>Add data labels showing percentages</h4><p>Click the pie chart → <strong>Chart Design → Add Chart Element → Data Labels → More Data Label Options</strong>. Tick <strong>Percentage</strong> and untick <strong>Value</strong>.</p></div></div>
+
+      <h3 class="text-base font-semibold mb-3 mt-6" style="font-family:'DM Sans',sans-serif; color:var(--slate);">✨ Part 3 — Add Sparklines</h3>
+      <div class="step"><span class="step-num" style="background:var(--amber-pale);color:var(--amber);">7</span><div class="step-content"><h4>Create a weekly data table</h4><p>Below your existing table, add weekly sales data for 3 shops across 5 weeks (make up figures). Put shop names in column A, week numbers as headers in B–F.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--amber-pale);color:var(--amber);">8</span><div class="step-content"><h4>Insert sparklines</h4><p>Click cell <code>G2</code> (next to row 1 of weekly data). Go to <strong>Insert → Sparklines → Line</strong>. In Data Range, select the 5 weeks of data for that shop. Click OK. Copy the sparkline down to the remaining rows.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--amber-pale);color:var(--amber);">9</span><div class="step-content"><h4>Highlight sparkline markers</h4><p>With sparklines selected, go to <strong>Sparkline tab → Show → High Point</strong> (ticked) and <strong>Low Point</strong> (ticked). This makes trends instantly visible.</p></div></div>
+
+      <div class="tip-box" style="border-color:var(--amber);background:var(--amber-pale);">
+        <strong style="color:var(--amber);">💡 When to use each:</strong> <strong>Bar/column charts</strong> — comparing categories. <strong>Pie charts</strong> — showing proportions of a whole. <strong>Line charts</strong> — trends over time. <strong>Sparklines</strong> — mini trends inside a table without taking up space.
+      </div>
+
+      <div class="task-box" style="border-color:var(--amber);background:#FEF9EE;">
+        <h4 style="color:var(--amber);">✅ Your Task</h4>
+        <ul>
+          <li>Create a third chart type of your choice (e.g. line chart showing weekly trends).</li>
+          <li>In a text box next to each chart, write one benefit and one drawback of that chart type.</li>
+          <li>Which chart is easiest for someone with no Excel knowledge to understand? Note your answer.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== A3 ===================== -->
+  <div id="a3" class="section-card" style="background:white; border-color:#7A93A4;">
+    <div class="section-header" onclick="toggle('body-a3', 'chev-a3')" style="background:var(--slate-pale);">
+      <div class="flex items-center gap-4">
+        <span class="step-num" style="background:var(--slate);color:white;">A3</span>
+        <div>
+          <div class="section-tag" style="color:var(--slate);">Topic Area 3 · 2 hours</div>
+          <h2 class="text-xl mt-0.5">Ensuring Data is Suitable for Processing</h2>
+        </div>
+      </div>
+      <svg id="chev-a3" class="chevron w-5 h-5" style="color:var(--slate);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </div>
+    <div id="body-a3" class="section-body">
+      <p class="text-sm mb-6" style="color:#6B7280;">Use Excel's Data Validation tool to apply range checks, type checks, presence checks and length checks to a registration form.</p>
+
+      <h3 class="text-base font-semibold mb-3" style="font-family:'DM Sans',sans-serif; color:var(--slate);">🏃 Part 1 — Build a Sports Registration Form</h3>
+      <div class="step"><span class="step-num" style="background:var(--slate-pale);color:var(--slate);">1</span><div class="step-content"><h4>Create a new sheet</h4><p>Add a sheet named <code>A3_Validation</code>. In Column A, list these labels: <code>First Name</code>, <code>Last Name</code>, <code>Age</code>, <code>Shoe Size</code>, <code>Phone Number</code>, <code>Postcode</code>, <code>Date of Birth</code>, <code>Sport</code>.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--slate-pale);color:var(--slate);">2</span><div class="step-content"><h4>Label Column B as input fields</h4><p>In <code>B1</code> type <strong>Your Entry</strong>. Widen columns A and B so labels are fully visible. Freeze the header row: <strong>View → Freeze Panes → Freeze Top Row</strong>.</p></div></div>
+
+      <h3 class="text-base font-semibold mb-3 mt-6" style="font-family:'DM Sans',sans-serif; color:var(--slate);">🔢 Part 2 — Apply Validation Rules</h3>
+      <div class="step"><span class="step-num" style="background:var(--slate-pale);color:var(--slate);">3</span><div class="step-content"><h4>Range check — Age</h4><p>Click <code>B3</code> (next to Age). Go to <strong>Data → Data Validation → Data Validation</strong>. Set Allow: <strong>Whole Number</strong>, Data: <strong>Between</strong>, Min: <code>10</code>, Max: <code>80</code>. Click the <strong>Error Alert</strong> tab: Style = Stop, Title = <em>Invalid Age</em>, Message = <em>Age must be between 10 and 80.</em></p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--slate-pale);color:var(--slate);">4</span><div class="step-content"><h4>Range check — Shoe Size</h4><p>Click <code>B4</code>. Data Validation → Whole Number → Between, Min: <code>1</code>, Max: <code>15</code>. Add an error message: <em>Shoe size must be between 1 and 15.</em></p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--slate-pale);color:var(--slate);">5</span><div class="step-content"><h4>Type check — Date of Birth</h4><p>Click <code>B7</code>. Data Validation → Allow: <strong>Date</strong>, Data: between, set a realistic range (e.g. 01/01/1940 to today). Error message: <em>Please enter a valid date in DD/MM/YYYY format.</em></p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--slate-pale);color:var(--slate);">6</span><div class="step-content"><h4>List check — Sport</h4><p>Click <code>B8</code>. Data Validation → Allow: <strong>List</strong>. In Source, type: <code>Football,Basketball,Swimming,Tennis,Athletics</code>. This creates a dropdown. The user can only select from your list — preventing typos.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--slate-pale);color:var(--slate);">7</span><div class="step-content"><h4>Length check — Phone Number (using a formula)</h4><p>Click <code>B5</code>. Data Validation → Allow: <strong>Custom</strong>. Formula: <code>=LEN(B5)=11</code>. Error: <em>Phone number must be exactly 11 digits.</em> This is a length check — LEN() counts the number of characters.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--slate-pale);color:var(--slate);">8</span><div class="step-content"><h4>Presence check — First &amp; Last Name</h4><p>Click <code>B1</code>. Data Validation → Allow: <strong>Custom</strong>. Formula: <code>=LEN(B1)>0</code>. Error: <em>This field cannot be left blank.</em> Repeat for <code>B2</code>. This checks the field isn't empty.</p></div></div>
+
+      <h3 class="text-base font-semibold mb-3 mt-6" style="font-family:'DM Sans',sans-serif; color:var(--slate);">📋 Part 3 — Add Input Messages (User Guidance)</h3>
+      <div class="step"><span class="step-num" style="background:var(--slate-pale);color:var(--slate);">9</span><div class="step-content"><h4>Add helpful tooltips</h4><p>For each validated cell, go back into Data Validation → <strong>Input Message</strong> tab. Add a helpful title and message. E.g. for Age: Title = <em>Enter Age</em>, Message = <em>Please enter your age as a whole number between 10 and 80.</em></p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--slate-pale);color:var(--slate);">10</span><div class="step-content"><h4>Test your validation</h4><p>Try entering incorrect data in each field (e.g. type <code>5</code> for age, or <code>abc</code> for phone). Confirm the error messages appear correctly. Then fill in valid data to check it works.</p></div></div>
+
+      <div class="tip-box" style="border-color:var(--slate);background:var(--slate-pale);">
+        <strong style="color:var(--slate);">💡 Validation vs Verification:</strong> <strong>Validation</strong> is an <em>automatic</em> check the computer performs (like the rules above). <strong>Verification</strong> is a <em>human</em> check — e.g. proofreading or double-entry (typing the same data twice to confirm it matches).
+      </div>
+
+      <div class="task-box" style="border-color:var(--slate);background:var(--slate-pale);">
+        <h4 style="color:var(--slate);">✅ Your Task</h4>
+        <ul>
+          <li>Add a "Confirm Email" field next to an "Email" field. Explain (in a text box) how you'd verify they match — this is double-entry verification.</li>
+          <li>List all 4 validation types you've used and give one real-world example for each beyond this exercise.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== A4 ===================== -->
+  <div id="a4" class="section-card" style="background:white; border-color:#5EADAD;">
+    <div class="section-header" onclick="toggle('body-a4', 'chev-a4')" style="background:var(--teal-pale);">
+      <div class="flex items-center gap-4">
+        <span class="step-num" style="background:var(--teal);color:white;">A4</span>
+        <div>
+          <div class="section-tag" style="color:var(--teal);">Topic Area 4 · 2 hours</div>
+          <h2 class="text-xl mt-0.5">Data Collection</h2>
+        </div>
+      </div>
+      <svg id="chev-a4" class="chevron w-5 h-5" style="color:var(--teal);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </div>
+    <div id="body-a4" class="section-body">
+      <p class="text-sm mb-6" style="color:#6B7280;">Design and analyse survey data in Excel to compare primary and secondary data collection methods.</p>
+
+      <h3 class="text-base font-semibold mb-3" style="font-family:'DM Sans',sans-serif; color:var(--slate);">📝 Part 1 — Design a Data Collection Log</h3>
+      <div class="step"><span class="step-num" style="background:var(--teal-pale);color:var(--teal);">1</span><div class="step-content"><h4>Create a new sheet: <code>A4_DataCollection</code></h4><p>Add the following column headers: <code>Method</code>, <code>Type (Primary/Secondary)</code>, <code>Sample Size</code>, <code>Cost (£)</code>, <code>Time (days)</code>, <code>Reliability (1-5)</code>, <code>Accuracy (1-5)</code>.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--teal-pale);color:var(--teal);">2</span><div class="step-content"><h4>Enter data for 6 collection methods</h4><p>Add rows for: Online Survey, Face-to-face Interview, Observation, Government Statistics, Published Reports, Social Media Analytics. Fill in estimated values for each column.</p>
+        <table class="excel-table mt-2">
+          <thead><tr><th>Method</th><th>Type</th><th>Sample</th><th>Reliability</th></tr></thead>
+          <tbody>
+            <tr><td>Online Survey</td><td>Primary</td><td>200</td><td>3</td></tr>
+            <tr><td>Face-to-face Interview</td><td>Primary</td><td>20</td><td>4</td></tr>
+            <tr><td>Observation</td><td>Primary</td><td>50</td><td>4</td></tr>
+            <tr><td>Government Statistics</td><td>Secondary</td><td>10000+</td><td>5</td></tr>
+            <tr><td>Published Reports</td><td>Secondary</td><td>Varies</td><td>3</td></tr>
+            <tr><td>Social Media Analytics</td><td>Secondary</td><td>Millions</td><td>2</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+
+      <h3 class="text-base font-semibold mb-3 mt-6" style="font-family:'DM Sans',sans-serif; color:var(--slate);">📊 Part 2 — Analyse Your Survey Results</h3>
+      <div class="step"><span class="step-num" style="background:var(--teal-pale);color:var(--teal);">3</span><div class="step-content"><h4>Add a COUNTIF for Primary vs Secondary</h4><p>Below the table, create a summary. In a new cell type: <code>=COUNTIF(B2:B7,"Primary")</code> labelled "Primary Methods" and <code>=COUNTIF(B2:B7,"Secondary")</code> labelled "Secondary Methods".</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--teal-pale);color:var(--teal);">4</span><div class="step-content"><h4>Calculate average scores</h4><p>Use <code>=AVERAGE(F2:F7)</code> to find average reliability and <code>=AVERAGE(G2:G7)</code> for average accuracy across all methods.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--teal-pale);color:var(--teal);">5</span><div class="step-content"><h4>Find the most reliable method</h4><p>Use <code>=MAX(F2:F7)</code> to find the highest reliability score. Then use <code>=INDEX(A2:A7,MATCH(MAX(F2:F7),F2:F7,0))</code> to return the method name. This is powerful data analysis!</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--teal-pale);color:var(--teal);">6</span><div class="step-content"><h4>Use Conditional Formatting to highlight</h4><p>Select the Reliability column (F2:F7). Go to <strong>Home → Conditional Formatting → Color Scales → Green-Yellow-Red</strong>. High scores go green, low scores go red — instant visual analysis.</p></div></div>
+
+      <h3 class="text-base font-semibold mb-3 mt-6" style="font-family:'DM Sans',sans-serif; color:var(--slate);">🔍 Part 3 — Simulate Survey Data</h3>
+      <div class="step"><span class="step-num" style="background:var(--teal-pale);color:var(--teal);">7</span><div class="step-content"><h4>Create a new sheet: <code>Survey_Results</code></h4><p>Simulate 15 classmates' survey responses about post-16 choices. Columns: <code>Respondent</code>, <code>Age</code>, <code>Gender</code>, <code>Choice</code> (Stay in School / College / Apprenticeship / Job), <code>Reason</code>.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--teal-pale);color:var(--teal);">8</span><div class="step-content"><h4>Count responses for each choice</h4><p>Use <code>=COUNTIF(D2:D16,"College")</code> (and similar) to count how many chose each option. Create a bar chart from these counts.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--teal-pale);color:var(--teal);">9</span><div class="step-content"><h4>Filter by gender</h4><p>Select your data → <strong>Data → Filter</strong>. Use the Gender dropdown to view only male or female responses. Notice how filtering small samples can give very different pictures of the data.</p></div></div>
+
+      <div class="tip-box" style="border-color:var(--teal);background:var(--teal-pale);">
+        <strong style="color:var(--teal);">💡 Data Collection Features to consider:</strong> Sample size, who is in the sample, when data was collected (currency), where it was collected, and what method was used — all affect how reliable and useful the data is.
+      </div>
+
+      <div class="task-box" style="border-color:var(--teal);background:#EEF8F8;">
+        <h4 style="color:var(--teal);">✅ Your Task</h4>
+        <ul>
+          <li>Change the sample to only include people who already have a job. How does the chart change? Screenshot both versions.</li>
+          <li>Next to your comparison table, add a column for "Limitations" and fill it in for each collection method.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== A5 ===================== -->
+  <div id="a5" class="section-card" style="background:white; border-color:#C98A8F;">
+    <div class="section-header" onclick="toggle('body-a5', 'chev-a5')" style="background:var(--rose-pale);">
+      <div class="flex items-center gap-4">
+        <span class="step-num" style="background:var(--rose);color:white;">A5</span>
+        <div>
+          <div class="section-tag" style="color:var(--rose);">Topic Area 5 · 1 hour</div>
+          <h2 class="text-xl mt-0.5">Quality of Information &amp; Decision Making</h2>
+        </div>
+      </div>
+      <svg id="chev-a5" class="chevron w-5 h-5" style="color:var(--rose);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </div>
+    <div id="body-a5" class="section-body">
+      <p class="text-sm mb-6" style="color:#6B7280;">Use Excel to explore how inaccurate or biased data leads to poor decisions — using the exercise scenario.</p>
+
+      <h3 class="text-base font-semibold mb-3" style="font-family:'DM Sans',sans-serif; color:var(--slate);">⚠️ Part 1 — Simulate Biased Survey Data</h3>
+      <div class="step"><span class="step-num" style="background:var(--rose-pale);color:var(--rose);">1</span><div class="step-content"><h4>Create sheet: <code>A5_QualityData</code></h4><p>Set up a table for the exercise survey about exercise. Columns: <code>Respondent ID</code>, <code>Age</code>, <code>Current Exercise (hrs/week)</code>, <code>Opinion on Exercise</code> (Positive/Negative/Neutral), <code>Health Condition</code> (Yes/No).</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--rose-pale);color:var(--rose);">2</span><div class="step-content"><h4>Enter a biased sample (10 people)</h4><p>Make all 10 respondents aged 65–80 with health conditions and low exercise levels. Make most opinions "Negative". This represents a <strong>biased sample</strong>.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--rose-pale);color:var(--rose);">3</span><div class="step-content"><h4>Analyse the biased data</h4><p>Use <code>=COUNTIF(D2:D11,"Negative")</code> to count negative opinions. Use <code>=AVERAGE(C2:C11)</code> for average exercise hours. Create a pie chart showing opinion distribution.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--rose-pale);color:var(--rose);">4</span><div class="step-content"><h4>Enter a balanced sample (10 more people)</h4><p>In rows 12–21, add 10 people aged 16–45, mixed health, higher exercise levels, mostly Positive opinions.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--rose-pale);color:var(--rose);">5</span><div class="step-content"><h4>Compare the two charts</h4><p>Create a second pie chart for the balanced group. Place both charts side by side. The difference will clearly show how <strong>who was surveyed</strong> affects the results dramatically.</p></div></div>
+
+      <h3 class="text-base font-semibold mb-3 mt-6" style="font-family:'DM Sans',sans-serif; color:var(--slate);">🏛️ Part 2 — Decision Impact Matrix</h3>
+      <div class="step"><span class="step-num" style="background:var(--rose-pale);color:var(--rose);">6</span><div class="step-content"><h4>Create a decision impact table</h4><p>Create a new table with columns: <code>Decision Maker</code>, <code>Decision Based on Inaccurate Data</code>, <code>Impact</code>, <code>Severity (1-5)</code>. Fill in rows for: Local Council, Sports Clubs, Schools, GPs, Gym Owners.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--rose-pale);color:var(--rose);">7</span><div class="step-content"><h4>Apply conditional formatting to Severity</h4><p>Select the Severity column. <strong>Home → Conditional Formatting → Icon Sets → 3 Traffic Lights</strong>. High severity = red, medium = amber, low = green.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--rose-pale);color:var(--rose);">8</span><div class="step-content"><h4>Sort by severity</h4><p>Click any cell in your table. Go to <strong>Data → Sort</strong>. Sort by Severity column, Largest to Smallest. This lets you quickly see which decisions would be most harmful.</p></div></div>
+
+      <div class="tip-box" style="border-color:var(--rose);background:var(--rose-pale);">
+        <strong style="color:var(--rose);">💡 GIGO — Garbage In, Garbage Out:</strong> If data entered into a system is inaccurate, the information produced will also be inaccurate. No matter how well Excel processes data, if the input is wrong, the output will be wrong too.
+      </div>
+
+      <div class="task-box" style="border-color:var(--rose);background:#FAF0F1;">
+        <h4 style="color:var(--rose);">✅ Your Task</h4>
+        <ul>
+          <li>Write a text box summary: what 3 changes to the original survey would have made the data more reliable?</li>
+          <li>Add a column calculating what % of total respondents each decision maker type represents in your analysis.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== A6 ===================== -->
+  <div id="a6" class="section-card" style="background:white; border-color:#8A96CC;">
+    <div class="section-header" onclick="toggle('body-a6', 'chev-a6')" style="background:var(--indigo-pale);">
+      <div class="flex items-center gap-4">
+        <span class="step-num" style="background:var(--indigo);color:white;">A6</span>
+        <div>
+          <div class="section-tag" style="color:var(--indigo);">Topic Area 6 · 1 hour</div>
+          <h2 class="text-xl mt-0.5">Sectors That Use Data Modelling</h2>
+        </div>
+      </div>
+      <svg id="chev-a6" class="chevron w-5 h-5" style="color:var(--indigo);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </div>
+    <div id="body-a6" class="section-body">
+      <p class="text-sm mb-6" style="color:#6B7280;">Build a real data model in Excel — a smartphone comparison tool — to understand how organisations use data modelling for decisions.</p>
+
+      <h3 class="text-base font-semibold mb-3" style="font-family:'DM Sans',sans-serif; color:var(--slate);">📱 Part 1 — Smartphone Comparison Model</h3>
+      <div class="step"><span class="step-num" style="background:var(--indigo-pale);color:var(--indigo);">1</span><div class="step-content"><h4>Create sheet: <code>A6_DataModel</code></h4><p>Set up columns: <code>Phone Model</code>, <code>Price (£)</code>, <code>Battery (hrs)</code>, <code>Storage (GB)</code>, <code>Camera (MP)</code>, <code>Rating (1-5)</code>, <code>Weighted Score</code>.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--indigo-pale);color:var(--indigo);">2</span><div class="step-content"><h4>Enter 5 phone models</h4><p>Add realistic data for 5 different smartphones. Use manufacturer websites or comparison sites to get accurate figures. Entering real data makes the model genuinely useful.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--indigo-pale);color:var(--indigo);">3</span><div class="step-content"><h4>Set weighting factors</h4><p>In a separate area, create a "Weights" section. E.g: Price weight: <code>0.3</code>, Battery: <code>0.2</code>, Storage: <code>0.2</code>, Camera: <code>0.15</code>, Rating: <code>0.15</code>. Weights must add up to <code>1.0</code> — check with <code>=SUM(weights)</code>.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--indigo-pale);color:var(--indigo);">4</span><div class="step-content"><h4>Normalise scores (0–100 scale)</h4><p>For each metric, calculate a normalised score. For price (lower is better): <code>=MIN(B2:B6)/B2*100</code>. For battery (higher is better): <code>=C2/MAX(C2:C6)*100</code>. Do this for all metrics in helper columns.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--indigo-pale);color:var(--indigo);">5</span><div class="step-content"><h4>Calculate a Weighted Score</h4><p>In the Weighted Score column, multiply each normalised score by its weight and sum them. E.g.: <code>=(NormPrice*0.3)+(NormBattery*0.2)+(NormStorage*0.2)+(NormCamera*0.15)+(NormRating*0.15)</code>. This gives each phone a single comparable score.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--indigo-pale);color:var(--indigo);">6</span><div class="step-content"><h4>Highlight the winner</h4><p>Select the Weighted Score column. <strong>Conditional Formatting → Top/Bottom Rules → Top 1 Item</strong>. Format it with a green fill to highlight the best overall phone based on your model.</p></div></div>
+
+      <h3 class="text-base font-semibold mb-3 mt-6" style="font-family:'DM Sans',sans-serif; color:var(--slate);">🏦 Part 2 — Bank Branch Closure Model</h3>
+      <div class="step"><span class="step-num" style="background:var(--indigo-pale);color:var(--indigo);">7</span><div class="step-content"><h4>Create a second table on the same sheet</h4><p>Columns: <code>Branch Location</code>, <code>Monthly Customers</code>, <code>Annual Cost (£)</code>, <code>Online Banking Users %</code>, <code>Nearest Alternative Branch (miles)</code>, <code>Elderly Population %</code>.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--indigo-pale);color:var(--indigo);">8</span><div class="step-content"><h4>Calculate cost per customer</h4><p>Add a column: <code>=C2/B2/12</code> — this gives the monthly cost to serve each customer. Branches with very high cost-per-customer are candidates for closure.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--indigo-pale);color:var(--indigo);">9</span><div class="step-content"><h4>Add an IF formula for closure recommendation</h4><p>In a new column called <strong>Recommend Closure?</strong>, use: <code>=IF(AND(D2>70,E2&lt;5,B2&lt;500),"Yes","No")</code>. This says: if most customers bank online AND there's a nearby branch AND footfall is low → recommend closure.</p></div></div>
+      <div class="step"><span class="step-num" style="background:var(--indigo-pale);color:var(--indigo);">10</span><div class="step-content"><h4>Test your model with What-If Analysis</h4><p>Change the threshold values in your IF formula. What happens if you lower the online banking threshold from 70% to 50%? How does this change the recommendations? This is <strong>what-if modelling</strong>.</p></div></div>
+
+      <div class="tip-box" style="border-color:var(--indigo);background:var(--indigo-pale);">
+        <strong style="color:var(--indigo);">💡 Why organisations use data models:</strong> They allow decisions to be tested before real-world action, multiple factors to be weighed simultaneously, and outcomes to be compared quickly — saving time, money, and reducing risk.
+      </div>
+
+      <div class="task-box" style="border-color:var(--indigo);background:#ECEEF9;">
+        <h4 style="color:var(--indigo);">✅ Your Task</h4>
+        <ul>
+          <li>Change the weights in your phone model so that price is now 0.5 (most important). How does the winning phone change?</li>
+          <li>In a text box, explain why two different people (a student vs a professional) might want different weightings.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== A7 ===================== -->
+  <div id="a7" class="section-card" style="background:white; border-color:#E8A96A;">
+    <div class="section-header" onclick="toggle('body-a7', 'chev-a7')" style="background:#FEF3E2;">
+      <div class="flex items-center gap-4">
+        <span class="step-num" style="background:#C05621;color:white;">A7</span>
+        <div>
+          <div class="section-tag" style="color:#C05621;">Topic Area 7 · 2 hours</div>
+          <h2 class="text-xl mt-0.5">Threats to Individuals</h2>
+        </div>
+      </div>
+      <svg id="chev-a7" class="chevron w-5 h-5" style="color:#C05621;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </div>
+    <div id="body-a7" class="section-body">
+      <p class="text-sm mb-6" style="color:#6B7280;">Use Excel to catalogue data threats, track potential misuse scenarios, and produce a structured analysis to support your infographic.</p>
+
+      <h3 class="text-base font-semibold mb-3" style="font-family:'DM Sans',sans-serif; color:var(--slate);">🔐 Part 1 — Personal Data Audit</h3>
+      <div class="step"><span class="step-num" style="background:#FEF3E2;color:#C05621;">1</span><div class="step-content"><h4>Create sheet: <code>A7_Threats</code></h4><p>In this sheet, list all the types of data collected about you. Columns: <code>Data Type</code>, <code>Who Collects It</code>, <code>Where It's Stored</code>, <code>Is It Sensitive? (Y/N)</code>, <code>Potential Threat</code>, <code>Risk Level (1-5)</code>.</p></div></div>
+      <div class="step"><span class="step-num" style="background:#FEF3E2;color:#C05621;">2</span><div class="step-content"><h4>Fill in at least 10 data types</h4><p>Examples: Name and address (school), browsing history (Google), purchase history (Amazon), location data (mobile phone provider), photos (social media), medical records (NHS). Be specific about where data is stored.</p></div></div>
+      <div class="step"><span class="step-num" style="background:#FEF3E2;color:#C05621;">3</span><div class="step-content"><h4>Assign risk levels and apply colour coding</h4><p>Rate each data type's risk from 1 (low) to 5 (high). Apply <strong>Conditional Formatting → Color Scales</strong> to the Risk Level column. This gives you a quick visual threat assessment.</p></div></div>
+      <div class="step"><span class="step-num" style="background:#FEF3E2;color:#C05621;">4</span><div class="step-content"><h4>Count sensitive data entries</h4><p>Below the table use: <code>=COUNTIF(D2:D11,"Y")</code> labelled "Sensitive Data Items". Also calculate: <code>=AVERAGE(F2:F11)</code> for average risk level. These numbers can go in your infographic.</p></div></div>
+
+      <h3 class="text-base font-semibold mb-3 mt-6" style="font-family:'DM Sans',sans-serif; color:var(--slate);">⚡ Part 2 — Threat Scenarios</h3>
+      <div class="step"><span class="step-num" style="background:#FEF3E2;color:#C05621;">5</span><div class="step-content"><h4>Create a Threats table</h4><p>New table, columns: <code>Threat Type</code>, <code>Description</code>, <code>Target</code>, <code>Prevention Method</code>, <code>How Common? (1-5)</code>. Add rows for: Identity Theft, Phishing, Inaccurate Data Storage, Targeted Advertising, Data Breach, Invasion of Privacy.</p></div></div>
+      <div class="step"><span class="step-num" style="background:#FEF3E2;color:#C05621;">6</span><div class="step-content"><h4>Categorise targets using dropdown validation</h4><p>In the Target column, apply Data Validation → List with: <code>All Individuals,Vulnerable People,Elderly,Children,Businesses,Everyone</code>. This keeps your analysis consistent.</p></div></div>
+      <div class="step"><span class="step-num" style="background:#FEF3E2;color:#C05621;">7</span><div class="step-content"><h4>Filter for high-risk threats</h4><p>Apply a Filter to your table. Filter "How Common?" to show only values of 4 or 5. These are the threats most worth focusing on for your infographic.</p></div></div>
+
+      <h3 class="text-base font-semibold mb-3 mt-6" style="font-family:'DM Sans',sans-serif; color:var(--slate);">🛡️ Part 3 — Prevention Checklist</h3>
+      <div class="step"><span class="step-num" style="background:#FEF3E2;color:#C05621;">8</span><div class="step-content"><h4>Build a precautions table</h4><p>Create a third table: <code>Precaution</code>, <code>Protects Against</code>, <code>Difficulty (Easy/Medium/Hard)</code>, <code>Cost (Free/Paid)</code>, <code>Completed? (checkbox)</code>.</p></div></div>
+      <div class="step"><span class="step-num" style="background:#FEF3E2;color:#C05621;">9</span><div class="step-content"><h4>Add checkboxes to the Completed column</h4><p>Click <code>E2</code>. Go to <strong>Developer tab → Insert → Form Controls → Check Box</strong>. (If Developer tab isn't visible: File → Options → Customise Ribbon → tick Developer.) Place checkboxes in each row.</p></div></div>
+      <div class="step"><span class="step-num" style="background:#FEF3E2;color:#C05621;">10</span><div class="step-content"><h4>Count completed precautions</h4><p>Link each checkbox to a cell (right-click → Format Control → Cell link). Then use <code>=COUNTIF(linked range, TRUE)</code> to show how many precautions are "done". This gamifies the safety checklist!</p></div></div>
+      <div class="step"><span class="step-num" style="background:#FEF3E2;color:#C05621;">11</span><div class="step-content"><h4>Create a chart for your infographic data</h4><p>From your threats analysis, create a bar chart showing "How Common" each threat type is. This chart can be exported (right-click → Save as Picture) and used in your infographic.</p></div></div>
+
+      <div class="tip-box" style="border-color:#C05621;background:#FEF3E2;">
+        <strong style="color:#C05621;">💡 Four key threats to individuals:</strong> <strong>Invasion of privacy</strong> (tracking without consent), <strong>Fraud</strong> (using your data to steal money/identity), <strong>Targeting vulnerable people</strong> (children, elderly), <strong>Inaccurate data storage</strong> (wrong info affecting credit scores, benefits, health records).
+      </div>
+
+      <div class="task-box" style="border-color:#C05621;background:#FEF9F0;">
+        <h4 style="color:#C05621;">✅ Your Task</h4>
+        <ul>
+          <li>Export your threat frequency chart as an image to use in your infographic.</li>
+          <li>Use <code>=COUNTIF</code> formulas to produce 3 statistics for your infographic (e.g. "X out of 10 data types collected about you are sensitive").</li>
+          <li>Add a final column to your data audit: "Could this data be used to target you?" — and flag entries with "High Risk" in red using conditional formatting.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="mt-10 p-6 rounded-2xl text-center" style="background:var(--slate);color:white;">
+    <h3 class="text-xl mb-2" style="font-family:'DM Serif Display',serif;">All Topics Complete</h3>
+    <p class="text-sm mb-4" style="color:rgba(255,255,255,0.65);">You have covered all 7 topic areas of the Digital Information Technology Award using Microsoft Excel.</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-xl mx-auto text-sm">
+      <div style="color:rgba(255,255,255,0.8);"><strong style="display:block;font-size:1.1rem;">COUNTIF</strong>Counting data</div>
+      <div style="color:rgba(255,255,255,0.8);"><strong style="display:block;font-size:1.1rem;">IF / AND</strong>Logic checks</div>
+      <div style="color:rgba(255,255,255,0.8);"><strong style="display:block;font-size:1.1rem;">Charts</strong>Visualisation</div>
+      <div style="color:rgba(255,255,255,0.8);"><strong style="display:block;font-size:1.1rem;">Validation</strong>Data quality</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function toggle(bodyId, chevId) {
+    const body = document.getElementById(bodyId);
+    const chev = document.getElementById(chevId);
+    body.classList.toggle('open');
+    chev.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
